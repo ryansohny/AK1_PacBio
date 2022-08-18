@@ -45,4 +45,4 @@ conda create -y -n masisoseq2 -c bioconda argparse pysam tqdm matplotlib numpy
 source activate masisoseq2
 ```
 
-
+#### 10X Cell Barcode downloaded from https://github.com/10XGenomics/cellranger/blob/master/lib/python/cellranger/barcodes/737K-august-2016.txt
