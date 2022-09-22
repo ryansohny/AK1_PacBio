@@ -25,7 +25,10 @@ conda env create -f conda_env_cpg.yaml
 source activate pbcpg
 conda install -c bioconda samtools
 conda install -c bioconda pbmm2
+
+# Download "hg38.analysisSet.fa.gz" from http://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/analysisSet/
 ```
+
 #### The model for calculating the modification probabilties across CpG context is available in https://github.com/PacificBiosciences/pb-CpG-tools/tree/main/pileup_calling_model
 
 ### 1-2. HiFi single-cell RNA (MAS-ISO-Seq)
