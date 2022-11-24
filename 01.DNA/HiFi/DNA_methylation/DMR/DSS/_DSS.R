@@ -4,8 +4,9 @@ npc_chr1 <- read.table("/mnt/mone/Project/AK1_PacBio/01.DNA/Merged/Phasing_wInde
 
 BSobj = makeBSseqData( list( ak1_chr1, ipsc_chr1, npc_chr1 ), c("AK1", "iPSC", "NPC"))
 
-dmltest_ak1_ipsc = DMLtest(BSobj, group1=c("AK1"), group2=c("iPSC"), smoothing=TRUE)
+
 dmltest_ak1_npc = DMLtest(BSobj, group1=c("AK1"), group2=c("NPC"), smoothing=TRUE)
-
-
 dmls_ak1_ipsc = callDML(dmltest_ak1_ipsc, p.threshold=0.001)
+dmrs_ak1_ipsc = callDMR(dmltest_ak1_ipsc, delta=0.1, p.threshold=0.05)
+
+showOneDMR(dmrs_ak1_ipsc[1,], BSobj)
