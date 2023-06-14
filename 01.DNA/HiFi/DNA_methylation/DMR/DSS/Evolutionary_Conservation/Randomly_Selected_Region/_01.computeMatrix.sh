@@ -6,8 +6,8 @@ reference-point \
 --referencePoint center \
 --scoreFileName hg38.phyloP100way.bw \
 --regionsFileName ${1} \
---outFileName phyloP_inside_DMR_woPMD.matrix.gz \
---outFileNameMatrix phyloP_inside_DMR_woPMD.tab \
+--outFileName phyloP_inside_random100k.matrix.gz \
+--outFileNameMatrix phyloP_inside_random100k.tab \
 --upstream 5000 \
 --downstream 5000 \
 --skipZeros \

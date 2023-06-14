@@ -3,6 +3,7 @@ source activate deeptools
 
 plotProfile \
 --matrixFile phyloP_inside_DMR_woPMD.matrix.gz \
+--averageType "mean" \
 --outFileName phyloP_inside_DMR_woPMD.pdf \
 --plotType lines \
 --plotTitle "Evolutionary Conservation" \
