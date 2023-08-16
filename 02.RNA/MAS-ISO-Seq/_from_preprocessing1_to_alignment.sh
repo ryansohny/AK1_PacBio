@@ -9,7 +9,7 @@ do
         rm tmp${i}
 
 mkdir -p ${sample}
-
+c
 skera split \
 --log-level INFO \
 --num-threads 55 \
