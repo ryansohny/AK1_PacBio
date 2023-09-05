@@ -41,6 +41,7 @@ $cat Overlap_w_geneImprint.tab
 Overlapped,14,46,17,111
 Not overlapped,11,1344,8,1279
 '''
+import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
