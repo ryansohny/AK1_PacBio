@@ -8,7 +8,7 @@ cpg_region = "CpG_Sites_CHM13v2.0_woY.bed"
 cmd = f'wc -l {cpg_region}'
 cpg_counts = int(os.popen(cmd).read().strip().split()[0])
 
-with open("Covered_CpGs_for_each_sampple_T2T.tab", 'w') as rfh:
+with open("Covered_CpGs_for_each_sample_T2T.tab", 'w') as rfh:
         rfh.write('Sample\tCpG_Covered_T2T\tTotal_CpG_T2T\n')
         for bedfile in bedfiles:
                 sampleid = bedfile.rstrip('_chm13_Low_coverage.bed')
@@ -27,7 +27,7 @@ cpg_region = "CpG_Sites_hg38_woY.bed"
 cmd = f'wc -l {cpg_region}'
 cpg_counts = int(os.popen(cmd).read().strip().split()[0])
 
-with open("Covered_CpGs_for_each_sampple_hg38.tab", 'w') as rfh:
+with open("Covered_CpGs_for_each_sample_hg38.tab", 'w') as rfh:
         rfh.write('Sample\tCpG_Covered_GRCh38\tTotal_CpG_GRCh38\n')
         for bedfile in bedfiles:
                 sampleid = bedfile.rstrip('_Low_coverage.bed')
@@ -51,7 +51,10 @@ df2 = pd.read_table("Covered_CpGs_for_each_sample_T2T.tab", index_col=0)
 df = pd.concat([df1, df2], axis=1)
 df = df.reset_index()
 df.columns = ['Sample', 'CpG covered (GRCh38)', 'CpG sites (GRCh38)', 'CpG covered (T2T)', 'CpG sites (T2T)']
-
+'''
+df['CpG sites (GRCh38)'] - df['CpG covered (GRCh38)'] # CpG sites not covered in GRCh38
+df['CpG sites (T2T)'] - df['CpG covered (T2T)'] # CpG sites not covered in T2T
+'''
 # Setting the bar position
 bar_width = 0.45
 x1 = df.index - bar_width/2
