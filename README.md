@@ -50,3 +50,7 @@ source activate masisoseq2
 ```
 
 #### 10X Cell Barcode downloaded from https://github.com/10XGenomics/cellranger/blob/master/lib/python/cellranger/barcodes/737K-august-2016.txt
+
+## 2. Data Availability
+The sequence data used in this study (e.g. PacBio HiFi Data) were submitted to the [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/sra) with BioProject Accession Number [PRJNA1071193](https://www.ncbi.nlm.nih.gov/sra/PRJNA1071193)*.
+(*Note: SRA reords will be accessible with the link above after 2024-12-31)
