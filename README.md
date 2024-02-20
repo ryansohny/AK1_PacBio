@@ -53,4 +53,4 @@ source activate masisoseq2
 
 ## 2. Data Availability
 The sequence data used in this study (e.g. PacBio HiFi Data) were submitted to the [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/sra) with BioProject Accession Number [PRJNA1071193](https://www.ncbi.nlm.nih.gov/sra/PRJNA1071193)*.
-(*Note: SRA reords will be accessible with the link above after 2024-12-31)
+(*Note: SRA records will be accessible with the link above after 2024-12-31 or upon pulication of our findings)
