@@ -143,15 +143,27 @@ isoseq3 groupdedup \
 ./${sample}/${sample}_deconcat.wo5mC.trimmed.5p--3p.flt.fltnc.clipTSO.bccorr.sorted.bam \
 ./${sample}/${sample}_deconcat.wo5mC.trimmed.5p--3p.flt.fltnc.clipTSO.bccorr.sorted.dedup.bam
 
-reference=/mnt/mone/Project/AK1_PacBio/Tools/Reference/GRCh38/DNA/hg38.analysisSet.fa
+reference_hg38=/mnt/mone/Project/AK1_PacBio/Tools/Reference/GRCh38/DNA/hg38.analysisSet.fa
+reference_chm13=/mnt/mone/Project/AK1_PacBio/Tools/Reference/CHM13/chm13v2.0.fa
 
 pbmm2 align \
 -j 55 \
 --sort \
 --preset ISOSEQ \
 --log-level INFO \
-${reference} \
+${reference_hg38} \
 ${sample}/${sample}_deconcat.wo5mC.trimmed.5p--3p.flt.fltnc.clipTSO.bccorr.sorted.dedup.bam \
 ${sample}/${sample}_mapped.bam
+
+:<<'END'
+pbmm2 align \
+-j 55 \
+--sort \
+--preset ISOSEQ \
+--log-level INFO \
+${reference_chm13} \
+${sample}/${sample}_deconcat.wo5mC.trimmed.5p--3p.flt.fltnc.clipTSO.bccorr.sorted.dedup.bam \
+${sample}/${sample}_mapped.bam
+END
 
 done
