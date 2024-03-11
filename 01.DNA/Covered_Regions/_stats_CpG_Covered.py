@@ -72,3 +72,19 @@ ax.set_xticklabels(['AK1\nHiFi', 'AK1\nWGBS', 'H1\nWGBS', 'HUES64\nWGBS', 'iPSC\
 ax.set_ylabel('CpG Sites Covered (10 millions)')
 ax.legend(loc='upper right', bbox_to_anchor=(1.25, 0.25), frameon=True, fancybox=False, edgecolor='black', prop={'size':10}, title=None)
 plt.savefig("Barplot_CpG_Covered_across_samples_hg38_and_T2T.pdf")
+
+
+### CpG islands, shores and shelves
+sample_palette = {'AK1':'#FF0000', 'AK1_WGBS': '#FF00FF', 'HG002': '#999999', 'H1_WGBS': '#40E0D0', 'HUES64_WGBS': '#437299' ,'iPSC': '#154360','NPC': '#229954'}
+
+cpgishoshe = pd.read_table("CpGishoresshelves_covered_by_sample.tab", index_col=0)
+cpgishoshe_p = cpgishoshe[cpgishoshe.index.str.endswith('P')]
+rename_dict = {'CpGiP': 'CpG Islands', 'CpGshoresP': 'CpG Shores', 'CpGshelvesP': 'CpG Shelves'}
+cpgishoshe_p.rename(index=rename_dict, inplace=True)
+cpgishoshe_p_melted = cpgishoshe_p.reset_index().melt(id_vars='ID', var_name='Sample', value_name='Covered Percentage (%)')
+fig, ax = plt.subplots(figsize=(10, 5), constrained_layout=True)
+sns.barplot(data=cpgishoshe_p_melted, x='Sample', y='Covered Percentage (%)', hue='ID', palette='tab20c', ax=ax)
+ax.legend(loc='upper right', bbox_to_anchor=(1.18, 0.2), frameon=True, fancybox=False, edgecolor='black', prop={'size':10}, title=None)
+ax.set_xticklabels(['AK1\nHiFi', 'AK1\nWGBS', 'HG002\nHiFi', 'H1\nWGBS', 'HUES64\nWGBS', 'iPSC\nHiFi', 'NPC\nHiFi'])
+ax.set_xlabel('')
+plt.savefig("Barplot_CpGishoresshelves_Covered_across_samples_hg38.pdf")
