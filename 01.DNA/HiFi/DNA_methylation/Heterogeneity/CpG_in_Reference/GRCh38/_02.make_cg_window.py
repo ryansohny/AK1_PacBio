@@ -11,7 +11,7 @@ except IndexError:
 	sys.exit()
 
 with open(f"{tile_cg_file}", 'r') as dfh, open(f"{output_file_prefix}.tab", 'w') as rfh:
-	rfh.write('ID\tCG_Num\tCG_Pos\n')
+	rfh.write('ID\tchromosome\tstart\tend\tCG_Num\tCG_Pos\n')
 
 	cg_pos_dict = dict()
 	cg_num_dict = dict()
@@ -47,7 +47,8 @@ with open(f"{tile_cg_file}", 'r') as dfh, open(f"{output_file_prefix}.tab", 'w')
 		line = dfh.readline().strip('\n').split('\t')
 
 	for k in cg_pos_dict.keys():
-		rfh.write(f'{k}\t{cg_num_dict[k]}\t{cg_pos_dict[k]}\n')
+		chrom, start, end = k.split(':')[0], k.split(':')[1].split('-')[0], k.split(':')[1].split('-')[1] 
+		rfh.write(f'{k}\t{chrom}\t{start}\t{end}\t{cg_num_dict[k]}\t{cg_pos_dict[k]}\n')
 		rfh.flush()
 
 # check
@@ -55,6 +56,6 @@ dfh = open(f"{output_file_prefix}.tab", 'r')
 dfh.readline()
 for i in dfh:
 	line = i.strip('\n').split('\t')
-	count = int(line[1])
-	if len(line[2].rstrip(';').split(';')) != count:
+	count = int(line[4])
+	if len(line[5].rstrip(';').split(';')) != count:
 		print('Something went wrong!!!')
