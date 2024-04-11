@@ -7,6 +7,14 @@ from scipy.spatial import distance
 from scipy.spatial.distance import pdist, squareform
 from scipy.stats import pearsonr, spearmanr
 
+def num_match_rate_calculation(read_segment):
+    ref_match = 0
+    read_segment_length = read_segment.query_length
+    for i in read_segment.cigartuples:
+        if i[0] == 7:
+            ref_match += i[1]
+    return (ref_match / read_segment_length)
+
 def get_read_level_cg(read_segment, pos):
     if read_segment.modified_bases != {}:
         read_alignment_start = read_segment.get_reference_positions()[0]
@@ -29,6 +37,8 @@ def make_cg_matrix(alignmentfile, refcgtab, coordinate):
     chrom, start, end = refcgtab.loc[coordinate]['chromosome'], refcgtab.loc[coordinate]['start'], refcgtab.loc[coordinate]['end']
     cg_matrix_list = list()
     for read in alignmentfile.fetch(chrom, start, end):
+        # num_match_rate_calculation()
+        # 우선, Number of match를 한 번 plotting 해보자 (from distance 구하는 데 성공한 read들 모아서)
         read_level_cg = get_read_level_cg(read, cg_pos)
         if np.all(read_level_cg != None):
             cg_matrix_list.append(read_level_cg)
@@ -61,8 +71,8 @@ try:
         for i in cgwindowfile.index:
             chrom, start, end = cgwindowfile.loc[i]['chromosome'], cgwindowfile.loc[i]['start'], cgwindowfile.loc[i]['end']
             cg_matrix = make_cg_matrix(bamfile, cgwindowfile, i)
-            if cg_matrix.shape[0] > 1:
-                cg_matrix = remove_nan_column_from_cg_matrix(cg_matrix)    
+            cg_matrix = remove_nan_column_from_cg_matrix(cg_matrix)  
+            if cg_matrix.size != 0 and cg_matrix.shape[0] > 1:    
                 distances = get_pairwise_distances_from_cg_matrix(cg_matrix)
                 outfile.write(f'{i}\t{chrom}\t{start}\t{end}\t{distances[0]}\t{distances[1]}\n')
                 outfile.flush()
