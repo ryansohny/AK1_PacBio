@@ -36,13 +36,15 @@ def make_cg_matrix(alignmentfile, refcgtab, coordinate):
     cg_pos = list(map(lambda x: int(x), refcgtab.loc[coordinate]['CG_Pos'].rstrip(';').split(';')))
     chrom, start, end = refcgtab.loc[coordinate]['chromosome'], refcgtab.loc[coordinate]['start'], refcgtab.loc[coordinate]['end']
     cg_matrix_list = list()
+    num_match_rate_list = list()
     for read in alignmentfile.fetch(chrom, start, end):
         # num_match_rate_calculation()
         # 우선, Number of match를 한 번 plotting 해보자 (from distance 구하는 데 성공한 read들 모아서)
         read_level_cg = get_read_level_cg(read, cg_pos)
         if np.all(read_level_cg != None):
             cg_matrix_list.append(read_level_cg)
-    return np.array(cg_matrix_list)
+            num_match_rate_list.append(str(read.get_tag('mg')))
+    return np.array(cg_matrix_list), ','.join(num_match_rate_list)
 
 def remove_nan_column_from_cg_matrix(matrix):
     mask = np.isnan(matrix)
@@ -62,25 +64,30 @@ def get_pairwise_distances_from_cg_matrix(matrix):
     # Other Metrics... (TBD)
     return average_pairwise_cos_similarity, average_pairwise_euc_distance
 
-try: 
-    bamfile = pysam.AlignmentFile(sys.argv[1], 'rb') # "chr20_500000-1000000_AK1.bam"
-    dir = "/mnt/mone/Project/AK1_PacBio/01.DNA/Analysis_Samples_Merged/Heterogeneity/CpG_in_Reference"
-    cgwindowfile = pd.read_table(f'{dir}/{sys.argv[2]}', index_col=0) # "10kb_CG_Information_hg38_primary_chrX.tab"
-    with open(f"{sys.argv[3]}.tab", 'w') as outfile:
-        outfile.write('ID\tchrom\tstart\tend\tMean_cos\tMean_euc\n')
-        for i in cgwindowfile.index:
-            chrom, start, end = cgwindowfile.loc[i]['chromosome'], cgwindowfile.loc[i]['start'], cgwindowfile.loc[i]['end']
-            cg_matrix = make_cg_matrix(bamfile, cgwindowfile, i)
-            cg_matrix = remove_nan_column_from_cg_matrix(cg_matrix)  
-            if cg_matrix.size != 0 and cg_matrix.shape[0] > 1:    
-                distances = get_pairwise_distances_from_cg_matrix(cg_matrix)
-                outfile.write(f'{i}\t{chrom}\t{start}\t{end}\t{distances[0]}\t{distances[1]}\n')
-                outfile.flush()
-    bamfile.close()
+if __name__ == '__main__':
+    try: 
+        bamfile = pysam.AlignmentFile(sys.argv[1], 'rb') # "chr20_500000-1000000_AK1.bam"
+        
+        ''' To-Dos: chromosome by chromosome processing implementation '''
+        
+        dir = "/mnt/mone/Project/AK1_PacBio/01.DNA/Analysis_Samples_Merged/Heterogeneity/CpG_in_Reference"
+        cgwindowfile = pd.read_table(f'{dir}/{sys.argv[2]}', index_col=0) # "10kb_CG_Information_hg38_primary_chrX.tab"
+        with open(f"{sys.argv[3]}.tab", 'w') as outfile:
+            outfile.write('ID\tchrom\tstart\tend\tMean_cos\tMean_euc\tRef_CG\tCG_Used\tSpanned_Reads\tSpanned_Reads_Match_Rate\n')
+            for i in cgwindowfile.index:
+                chrom, start, end = cgwindowfile.loc[i]['chromosome'], cgwindowfile.loc[i]['start'], cgwindowfile.loc[i]['end']
+                num_ref_cg = cgwindowfile.loc[i]['CG_Num']
+                cg_matrix, num_match_rate = make_cg_matrix(bamfile, cgwindowfile, i)
+                cg_matrix = remove_nan_column_from_cg_matrix(cg_matrix)  
+                if cg_matrix.size != 0 and cg_matrix.shape[0] > 1:    
+                    distances = get_pairwise_distances_from_cg_matrix(cg_matrix)
+                    outfile.write(f'{i}\t{chrom}\t{start}\t{end}\t{distances[0]}\t{distances[1]}\t{num_ref_cg}\t{cg_matrix.shape[1]}\t{num_match_rate}\n')
+                    outfile.flush()
+        bamfile.close()
 
-except IndexError:
-    print('\n')
-    print('Please Provide Input Arguments\n')
-    print('usage: python _heterogeneity_calculation.py [PacBio Bam File] [Reference CG window] [Output prefix]\n')
-    print('usage example: python _heterogeneity_calculation.py AK1_haplotagged_wIndels_splt.bam 10kb_CG_Information_hg38_primary_chrX.tab AK1_10kb_CG_Heterogeneity')
-    print('\n')
+    except IndexError:
+        print('\n')
+        print('Please Provide Input Arguments\n')
+        print('usage: python _heterogeneity_calculation.py [PacBio Bam File] [Reference CG window] [Output prefix]\n')
+        print('usage example: python _heterogeneity_calculation.py AK1_haplotagged_wIndels_splt.bam 10kb_CG_Information_hg38_primary_chrX.tab AK1_10kb_CG_Heterogeneity')
+        print('\n')
